@@ -58,7 +58,7 @@ class ReceiptItem implements Comparable<ReceiptItem>, Serializable {
         shipmentItem(nullable: true)
         inventoryItem(nullable: true)
         binLocation(nullable: true)
-        quantityShipped(range: 0..2147483646, nullable: false)
+        quantityShipped(range: 0L..2147483646L, nullable: false)
         quantityReceived(nullable: true)
         quantityCanceled(nullable: true)
         recipient(nullable: true)

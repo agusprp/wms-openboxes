@@ -3,7 +3,7 @@
 
 services:
   app:
-    image: ghcr.io/openboxes/openboxes:latest
+    image: wms-openboxes:custom
     container_name: openboxes-wms-app
     expose:
       - "8080"

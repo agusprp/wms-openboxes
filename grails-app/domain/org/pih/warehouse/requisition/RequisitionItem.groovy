@@ -130,7 +130,7 @@ class RequisitionItem implements Comparable<RequisitionItem>, Serializable {
         productPackage(nullable: true)
         inventoryItem(nullable: true)
         requestedBy(nullable: true)
-        quantity(nullable: false, min: 0)
+        quantity(nullable: false, min: 0L)
         quantityApproved(nullable: true)
         quantityCanceled(nullable: true,
                 validator: { value, obj ->
