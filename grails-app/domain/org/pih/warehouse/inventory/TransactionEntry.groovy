@@ -17,7 +17,7 @@ import org.pih.warehouse.product.Product
 class TransactionEntry implements Comparable, Serializable {
 
     String id
-    Integer quantity
+    BigDecimal quantity
     Product product
     InventoryItem inventoryItem        // The inventory item being tracked
     Location binLocation            // Bin location of inventory item

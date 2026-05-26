@@ -23,7 +23,7 @@ class ConsumptionFact {
     String transactionCode
     String transactionType
 
-    BigDecimal quantity = 0.0
+    BigDecimal quantity = BigDecimal.ZERO
     BigDecimal unitPrice = 0.0
     BigDecimal unitCost = 0.0
 

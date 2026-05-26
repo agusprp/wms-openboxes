@@ -28,9 +28,9 @@ class InventorySnapshot implements java.io.Serializable {
     String lotNumber
     String binLocationName
 
-    Integer quantityOnHand
-    Integer quantityInbound
-    Integer quantityOutbound
+    BigDecimal quantityOnHand
+    BigDecimal quantityInbound
+    BigDecimal quantityOutbound
 
     // Auditing
     Date dateCreated

@@ -52,7 +52,7 @@ class ProductPackageImportDataService implements ImportDataService {
 
             // Find an existing product package within the
             ProductPackage existingProductPackage = productSupplier?.productPackages?.find {
-                it.uom == unitOfMeasure && it.quantity == quantity.toInteger()
+                it.uom == unitOfMeasure && it.quantity == quantity.toBigDecimal()
             }
             if (!id && existingProductPackage) {
                 command.errors.reject("Row ${index + 1}: Product package with ID ${existingProductPackage} already exists for product=${product.productCode} and uom=${unitOfMeasure.code}/${quantity}. To update this row please copy the primary key '${existingProductPackage?.id}' into ID column in row ${index+1}.")

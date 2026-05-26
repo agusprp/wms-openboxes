@@ -33,7 +33,7 @@ class ProductPackage implements Comparable<ProductPackage>, Serializable {
     String name                // Name of product as it appears on the package
     String description        // Description of the package
     String gtin                // Global trade identification number
-    Integer quantity        // Number of units (each) in the box
+    BigDecimal quantity        // Number of units (each) in the box
     UnitOfMeasure uom        // Unit of measure of the package (e.g. box, case, etc)
     ProductPrice productPrice
 

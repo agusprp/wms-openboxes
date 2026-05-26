@@ -307,7 +307,7 @@ class PrepaymentInvoiceService {
         }
 
         if (properties.quantity) {
-            Integer quantity = properties.quantity as Integer
+            def quantity = properties.quantity
             updateInvoiceItemQuantity(itemId, quantity)
             return
         }

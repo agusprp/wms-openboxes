@@ -6,7 +6,7 @@ import org.pih.warehouse.product.Product
 class InventoryShrinkageResult implements Serializable {
     Product product
     Location facility
-    Integer quantitySum
+    BigDecimal quantitySum
     BigDecimal unitPrice
 
     BigDecimal getTotalLoss() {

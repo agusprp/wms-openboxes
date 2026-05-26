@@ -22,9 +22,9 @@ class CycleCountCandidate {
 
     String internalLocations
 
-    Integer quantityOnHand
+    BigDecimal quantityOnHand
 
-    Integer quantityAllocated
+    BigDecimal quantityAllocated
 
     Integer inventoryItemCount
 

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <changeSet id="OBWMS-20260526-1600-1" author="wms-team">
+        <comment>Change Integer quantity columns to decimal(19,3) for decimal quantity support</comment>
+
+        <!-- Inventory -->
+        <modifyDataType tableName="inventory_snapshot" columnName="quantity_on_hand" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="inventory_snapshot" columnName="quantity_inbound" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="inventory_snapshot" columnName="quantity_outbound" newDataType="decimal(19,3)"/>
+
+        <modifyDataType tableName="inventory_item" columnName="quantity" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="inventory_item" columnName="quantity_on_hand" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="inventory_item" columnName="quantity_available_to_promise" newDataType="decimal(19,3)"/>
+
+        <modifyDataType tableName="inventory_item_snapshot" columnName="quantity_on_hand" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="inventory_item_snapshot" columnName="quantity_inbound" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="inventory_item_snapshot" columnName="quantity_outbound" newDataType="decimal(19,3)"/>
+
+        <modifyDataType tableName="transaction_entry" columnName="quantity" newDataType="decimal(19,3)"/>
+
+        <modifyDataType tableName="inventory_audit_details" columnName="quantity_adjusted" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="inventory_audit_details" columnName="quantity_on_hand" newDataType="decimal(19,3)"/>
+
+        <modifyDataType tableName="inventory_audit_summary" columnName="quantity_adjusted" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="inventory_audit_summary" columnName="quantity_demanded" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="inventory_audit_summary" columnName="quantity_on_hand" newDataType="decimal(19,3)"/>
+
+        <!-- Order -->
+        <modifyDataType tableName="order_item" columnName="quantity" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="order_item_details" columnName="quantity" newDataType="decimal(19,3)"/>
+
+        <!-- Shipping -->
+        <modifyDataType tableName="shipment_item" columnName="quantity" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="shipment_item" columnName="quantity_picked" newDataType="decimal(19,3)"/>
+
+        <modifyDataType tableName="fulfillment_item" columnName="quantity" newDataType="decimal(19,3)"/>
+
+        <!-- Receiving -->
+        <modifyDataType tableName="receipt_item" columnName="quantity_shipped" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="receipt_item" columnName="quantity_received" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="receipt_item" columnName="quantity_canceled" newDataType="decimal(19,3)"/>
+
+        <!-- Requisition -->
+        <modifyDataType tableName="requisition_item" columnName="quantity" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="requisition_item" columnName="quantity_counted" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="requisition_item" columnName="quantity_approved" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="requisition_item" columnName="quantity_canceled" newDataType="decimal(19,3)"/>
+
+        <!-- Product -->
+        <modifyDataType tableName="product_package" columnName="quantity" newDataType="decimal(19,3)"/>
+
+        <modifyDataType tableName="product_availability" columnName="quantity_on_hand" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="product_availability" columnName="quantity_allocated" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="product_availability" columnName="quantity_on_hold" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="product_availability" columnName="quantity_available_to_promise" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="product_availability" columnName="quantity_not_picked" newDataType="decimal(19,3)"/>
+
+        <!-- Picklist -->
+        <modifyDataType tableName="picklist_item" columnName="quantity" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="picklist_item" columnName="quantity_picked" newDataType="decimal(19,3)"/>
+
+        <!-- Cycle Count -->
+        <modifyDataType tableName="cycle_count_candidate" columnName="quantity_on_hand" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="cycle_count_candidate" columnName="quantity_allocated" newDataType="decimal(19,3)"/>
+
+        <modifyDataType tableName="cycle_count_item" columnName="quantity_on_hand" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="cycle_count_item" columnName="quantity_counted" newDataType="decimal(19,3)"/>
+
+        <modifyDataType tableName="cycle_count_details" columnName="blind_count_quantity_on_hand" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="cycle_count_details" columnName="blind_count_quantity_counted" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="cycle_count_details" columnName="blind_count_quantity_variance" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="cycle_count_details" columnName="verification_count_quantity_on_hand" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="cycle_count_details" columnName="verification_count_quantity_counted" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="cycle_count_details" columnName="verification_count_quantity_variance" newDataType="decimal(19,3)"/>
+
+        <modifyDataType tableName="cycle_count_summary" columnName="blind_count_quantity_on_hand" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="cycle_count_summary" columnName="blind_count_quantity_counted" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="cycle_count_summary" columnName="blind_count_quantity_variance" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="cycle_count_summary" columnName="verification_count_quantity_on_hand" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="cycle_count_summary" columnName="verification_count_quantity_counted" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="cycle_count_summary" columnName="verification_count_quantity_variance" newDataType="decimal(19,3)"/>
+
+        <modifyDataType tableName="pending_cycle_count_request" columnName="quantity_on_hand" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="pending_cycle_count_request" columnName="quantity_allocated" newDataType="decimal(19,3)"/>
+
+        <!-- Requirement -->
+        <modifyDataType tableName="requirement" columnName="quantity_in_bin" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="requirement" columnName="quantity_available" newDataType="decimal(19,3)"/>
+
+        <!-- Invoice -->
+        <modifyDataType tableName="invoice_item" columnName="quantity" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="invoice_item_candidate" columnName="quantity" newDataType="decimal(19,3)"/>
+        <modifyDataType tableName="invoice_item_candidate" columnName="quantity_to_invoice" newDataType="decimal(19,3)"/>
+    </changeSet>
+</databaseChangeLog>

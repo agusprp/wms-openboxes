@@ -513,7 +513,7 @@ class Shipment implements Comparable, Serializable, Historizable {
     /**
      * Clones the specified container
      */
-    void cloneContainer(Container container, Integer quantity) {}
+    void cloneContainer(Container container, BigDecimal quantity) {}
 
     Float totalWeightInKilograms() {
         return containers.findAll { it.parentContainer == null }.collect {

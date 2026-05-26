@@ -31,7 +31,7 @@ class ShipmentItem implements Comparable, Serializable {
     String lotNumber            // Loose coupling to the inventory lot
     Date expirationDate
     Product product                // Specific product that we're tracking
-    Integer quantity            // Quantity could be a class on its own
+    BigDecimal quantity            // Quantity could be a class on its own
     Person recipient            // Recipient of an item
     Donor donor                    // Organization that donated the goods
     Date dateCreated
@@ -182,11 +182,11 @@ class ShipmentItem implements Comparable, Serializable {
      * @deprecated
      * @return
      */
-    Integer quantityReceived() {
+    BigDecimal quantityReceived() {
         return quantityReceived
     }
 
-    Integer getQuantityReceived() {
+    BigDecimal getQuantityReceived() {
         return (receiptItems) ? receiptItems.sum { ReceiptItem receiptItem ->
             ReceiptStatusCode.RECEIVED == receiptItem?.receipt?.receiptStatusCode && receiptItem?.product == product &&
                     receiptItem?.quantityReceived ? receiptItem.quantityReceived : 0
@@ -197,26 +197,26 @@ class ShipmentItem implements Comparable, Serializable {
      * @deprecated
      * @return
      */
-    Integer quantityCanceled() {
+    BigDecimal quantityCanceled() {
         return quantityCanceled
     }
 
-    Integer getQuantityCanceled() {
+    BigDecimal getQuantityCanceled() {
         return (receiptItems) ? receiptItems.sum { ReceiptItem receiptItem ->
             ReceiptStatusCode.RECEIVED == receiptItem?.receipt?.receiptStatusCode && receiptItem?.product == product &&
                     receiptItem?.quantityCanceled ? receiptItem.quantityCanceled : 0
         } : 0
     }
 
-    Integer getQuantityRemaining() {
+    BigDecimal getQuantityRemaining() {
         return quantity - quantityReceivedAndCanceled
     }
 
-    Integer getQuantityReceivedAndCanceled() {
+    BigDecimal getQuantityReceivedAndCanceled() {
         return quantityReceived + quantityCanceled
     }
 
-    Integer getQuantityRemainingToShip() {
+    BigDecimal getQuantityRemainingToShip() {
         return orderItem ? orderItem.getQuantityRemainingToShip(shipment) : 0
     }
 
@@ -224,8 +224,8 @@ class ShipmentItem implements Comparable, Serializable {
         return orderItem ? orderItem.quantityPerUom : 1
     }
 
-    Integer getQuantityPicked() {
-        Integer quantityPicked
+    BigDecimal getQuantityPicked() {
+        BigDecimal quantityPicked
         if (binLocation) {
             quantityPicked = requisitionItem?.picklistItems?.findAll { it.inventoryItem == inventoryItem && it.binLocation == binLocation }?.sum { it.quantity }
         } else {
@@ -235,8 +235,8 @@ class ShipmentItem implements Comparable, Serializable {
     }
 
     // For requisition based shipments, to avoid qualifying recalled or on hold items into quantity picked validation
-    Integer getUnavailableQuantityPicked() {
-        Integer unavailableQuantityPicked
+    BigDecimal getUnavailableQuantityPicked() {
+        BigDecimal unavailableQuantityPicked
         if (binLocation) {
             unavailableQuantityPicked = requisitionItem?.picklistItems?.findAll {
                 it.inventoryItem == inventoryItem && it.binLocation == binLocation && (
@@ -251,8 +251,8 @@ class ShipmentItem implements Comparable, Serializable {
         return unavailableQuantityPicked?:0
     }
 
-    Integer getQuantityPickedFromOrders() {
-        Integer quantityPicked
+    BigDecimal getQuantityPickedFromOrders() {
+        BigDecimal quantityPicked
         if (binLocation) {
             quantityPicked = orderItems.collect { it.picklistItems?.findAll { it.inventoryItem == inventoryItem && it.binLocation == binLocation }?.sum { it.quantity } }.sum()
         } else {
@@ -275,20 +275,20 @@ class ShipmentItem implements Comparable, Serializable {
     }
 
     // quantity invoiced in uom
-    Integer getQuantityInvoiced() {
+    BigDecimal getQuantityInvoiced() {
         return invoiceItems?.findAll { !it.inverse } ?.sum { it.quantity ?: 0 } ?: 0
     }
 
-    Integer getQuantityInvoicedInStandardUom() {
+    BigDecimal getQuantityInvoicedInStandardUom() {
         return quantityInvoiced * quantityPerUom
     }
 
-    Integer getQuantityToInvoiceInStandardUom() {
+    BigDecimal getQuantityToInvoiceInStandardUom() {
         // ShipmentItem.quantity is in standard uom
         return quantity - quantityInvoicedInStandardUom
     }
 
-    Integer getQuantityToInvoice() {
+    BigDecimal getQuantityToInvoice() {
         return quantityToInvoiceInStandardUom / quantityPerUom
     }
 

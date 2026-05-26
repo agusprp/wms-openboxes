@@ -46,17 +46,17 @@ class RequisitionItem implements Comparable<RequisitionItem>, Serializable {
     RequisitionItemType requisitionItemType = RequisitionItemType.ORIGINAL
     ProductGroup productGroup
     ProductPackage productPackage
-    Integer quantity
+    BigDecimal quantity
 
     // saved QOH in ward request
-    Integer quantityCounted
+    BigDecimal quantityCounted
 
     // Status is handled dynamically at the moment, but we might want to save it at some point
     //RequisitionItemStatus requisitionItemStatus
 
     // Cancellation / change
-    Integer quantityApproved
-    Integer quantityCanceled
+    BigDecimal quantityApproved
+    BigDecimal quantityCanceled
     String cancelReasonCode
     String cancelComments
 
@@ -283,7 +283,7 @@ class RequisitionItem implements Comparable<RequisitionItem>, Serializable {
      * @param comments
      * @return
      */
-    def changeQuantity(Integer newQuantity, String reasonCode, String comments) {
+    def changeQuantity(BigDecimal newQuantity, String reasonCode, String comments) {
         changeQuantity(newQuantity, null, reasonCode, comments)
     }
 
@@ -295,7 +295,7 @@ class RequisitionItem implements Comparable<RequisitionItem>, Serializable {
      * @param comments
      * @return
      */
-    def changeQuantity(Integer newQuantity, ProductPackage newProductPackage, String reasonCode, String comments) {
+    def changeQuantity(BigDecimal newQuantity, ProductPackage newProductPackage, String reasonCode, String comments) {
 
         log.info "Change quantity: ${newQuantity} ${reasonCode} ${comments}"
         // And then create a new requisition item for the remaining quantity (if not 0)
@@ -336,7 +336,7 @@ class RequisitionItem implements Comparable<RequisitionItem>, Serializable {
             modificationItem.save(flush: true, failOnError: true)
         }
     }
-    def chooseSubstitute(Product newProduct, ProductPackage newProductPackage, Integer newQuantity, String reasonCode, String comments) {
+    def chooseSubstitute(Product newProduct, ProductPackage newProductPackage, BigDecimal newQuantity, String reasonCode, String comments) {
         chooseSubstitute(newProduct, newProductPackage, newQuantity, reasonCode, comments, null)
     }
 
@@ -349,7 +349,7 @@ class RequisitionItem implements Comparable<RequisitionItem>, Serializable {
      * @param comments
      * @return
      */
-    def chooseSubstitute(Product newProduct, ProductPackage newProductPackage, Integer newQuantity, String reasonCode, String comments, Integer sortOrder) {
+    def chooseSubstitute(Product newProduct, ProductPackage newProductPackage, BigDecimal newQuantity, String reasonCode, String comments, BigDecimal sortOrder) {
 
         if (!newProduct) {
             errors.rejectValue("product", "requisitionItem.product.invalid")
@@ -676,12 +676,12 @@ class RequisitionItem implements Comparable<RequisitionItem>, Serializable {
         return product.pricePerUnit ? quantity * product?.pricePerUnit : null
     }
 
-    Integer getQuantityIssued() {
+    BigDecimal getQuantityIssued() {
         return substitutionItems ? substitutionItems?.sum { it.quantityIssued } ?: 0 :
                 requisition?.shipment?.shipmentItems?.findAll { it.requisitionItem == this }?.sum { it.quantity } ?: 0
     }
 
-    Integer getQuantityAdjusted() {
+    BigDecimal getQuantityAdjusted() {
         def quantityAdjusted = 0
 
         if (modificationItem) {

@@ -9,7 +9,7 @@ class OrderItemDetails implements Serializable {
     Order order
     String orderNumber
     Product product
-    Integer quantity
+    BigDecimal quantity
     String orderItemStatus
     UnitOfMeasure quantityUom
     BigDecimal quantityPerUom = 1

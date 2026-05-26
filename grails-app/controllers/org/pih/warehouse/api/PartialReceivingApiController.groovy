@@ -111,7 +111,7 @@ class PartialReceivingApiController {
                 String expirationDate = tokens[5] ?: null
                 String binLocation = tokens[6] ?: null
                 String recipientId = tokens[7] ?: null
-                Integer quantityReceiving = tokens[11] ? tokens[11].toInteger() : null
+                def quantityReceiving = tokens[11] ? tokens[11].toBigDecimal() : null
                 String comment = tokens[12] ? tokens[12] : null
 
                 List<PartialReceiptItem> partialReceiptItems = []

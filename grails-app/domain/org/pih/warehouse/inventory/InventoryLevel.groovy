@@ -32,13 +32,13 @@ class InventoryLevel {
     Boolean preferred = Boolean.FALSE
 
     // Should warn user when stock is below safety stock level
-    Integer minQuantity
+    BigDecimal minQuantity
 
     // Should reorder product when quantity falls below this value
-    Integer reorderQuantity
+    BigDecimal reorderQuantity
 
     // Should warn user when quantity is above this value
-    Integer maxQuantity
+    BigDecimal maxQuantity
 
     // Amount of stock typically used during forecast period
     BigDecimal forecastQuantity
@@ -118,7 +118,7 @@ class InventoryLevel {
         return InventoryUtil.getStatusMessage(status, minQuantity, reorderQuantity, maxQuantity, currentQuantity)
     }
 
-    Integer getMonthlyForecastQuantity() {
+    BigDecimal getMonthlyForecastQuantity() {
         return forecastPeriodDays ? Math.ceil(((Double) (forecastQuantity) / forecastPeriodDays) * 30) : (forecastQuantity * 30)
     }
 

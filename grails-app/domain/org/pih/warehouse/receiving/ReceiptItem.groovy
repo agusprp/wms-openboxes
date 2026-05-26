@@ -28,9 +28,9 @@ class ReceiptItem implements Comparable<ReceiptItem>, Serializable {
     String lotNumber                    // Loose coupling to the inventory lot
     Date expirationDate                    // Date of expiration
 
-    Integer quantityShipped                // Quantity that was shipped
-    Integer quantityReceived            // Quantity could be a class on its own
-    Integer quantityCanceled            // Quantity canceled
+    BigDecimal quantityShipped                // Quantity that was shipped
+    BigDecimal quantityReceived            // Quantity could be a class on its own
+    BigDecimal quantityCanceled            // Quantity canceled
     String comment                        // Comment about the item quality
 
     ShipmentItem shipmentItem

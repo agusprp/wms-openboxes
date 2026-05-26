@@ -19,8 +19,8 @@ class InventoryAuditDetails implements Serializable {
     String transactionNumber
 
     // Facts
-    Integer quantityAdjusted
-    Integer quantityOnHand
+    BigDecimal quantityAdjusted
+    BigDecimal quantityOnHand
     BigDecimal pricePerUnit
 
     static mapping = {

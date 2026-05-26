@@ -32,9 +32,9 @@ class PendingCycleCountRequest {
 
     User updatedBy
 
-    Integer quantityOnHand
+    BigDecimal quantityOnHand
 
-    Integer quantityAllocated
+    BigDecimal quantityAllocated
 
     String internalLocations
 

@@ -9,17 +9,17 @@ class OrderItemSummary implements Serializable {
     Order order
     String orderNumber
     Product product
-    Integer quantity
+    BigDecimal quantity
     String orderItemStatus
     UnitOfMeasure quantityUom
     BigDecimal quantityPerUom = 1
     BigDecimal unitPrice
 
-    Integer quantityOrdered
-    Integer quantityShipped
-    Integer quantityReceived
-    Integer quantityCanceled
-    Integer quantityInvoiced
+    BigDecimal quantityOrdered
+    BigDecimal quantityShipped
+    BigDecimal quantityReceived
+    BigDecimal quantityCanceled
+    BigDecimal quantityInvoiced
 
     Boolean isItemFullyOrdered = Boolean.FALSE
     Boolean isItemFullyShipped = Boolean.FALSE

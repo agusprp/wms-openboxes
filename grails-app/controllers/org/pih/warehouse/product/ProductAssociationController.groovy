@@ -256,7 +256,7 @@ class ProductAssociationController {
     void bindMutualAssociationData(ProductAssociation mutualAssociation, Map params) {
         mutualAssociation.product = Product.get(params.associatedProduct.id)
         mutualAssociation.associatedProduct = Product.get(params.product.id)
-        def quantity = params.quantity as Integer
+        def quantity = params.quantity as BigDecimal
         mutualAssociation.quantity = quantity != 0 ? (1 / quantity) : 0 as BigDecimal
         mutualAssociation.code = ProductAssociationTypeCode.valueOf(ProductAssociationTypeCode, params.code)
         mutualAssociation.comments = params.comments

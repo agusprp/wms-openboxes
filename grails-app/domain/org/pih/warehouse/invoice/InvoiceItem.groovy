@@ -40,7 +40,7 @@ class InvoiceItem implements Serializable {
     GlAccount glAccount
     BudgetCode budgetCode
 
-    Integer quantity
+    BigDecimal quantity
     UnitOfMeasure quantityUom
     BigDecimal quantityPerUom = 1
     BigDecimal amount
@@ -80,7 +80,7 @@ class InvoiceItem implements Serializable {
         product(nullable: true)
         glAccount(nullable: true)
         budgetCode(nullable: true)
-        quantity(nullable: false, min: 0, validator: { Integer quantity, InvoiceItem obj ->
+        quantity(nullable: false, min: 0, validator: { BigDecimal quantity, InvoiceItem obj ->
             // Order adjustments are not quantity-based, they should always have quantity = 1
             if (obj.orderAdjustment && quantity > 1) {
                 return ['invoiceItem.invalidQuantity.label']
@@ -92,16 +92,16 @@ class InvoiceItem implements Serializable {
                 return true
             }
 
-            Integer originalQuantityInvoiced = obj.getPersistentValue('quantity')
+            BigDecimal originalQuantityInvoiced = obj.getPersistentValue('quantity')
             ShipmentItem shipmentItem = obj?.shipmentItem
             if (originalQuantityInvoiced != null && shipmentItem) {
                 // get quantity invoiced "outside" current invoice item (using the new quantity in the calculation)
-                Integer quantityInvoicedOutside = shipmentItem.quantityInvoiced - quantity
+                BigDecimal quantityInvoicedOutside = shipmentItem.quantityInvoiced - quantity
                 // get quantity shipped in uom (because shipmentItem.quantity is in "standard" uom, and invoiceItem.quantity is in uom)
-                Integer quantityShippedInUom = (shipmentItem.quantity / shipmentItem.quantityPerUom) as Integer
+                BigDecimal quantityShippedInUom = (shipmentItem.quantity / shipmentItem.quantityPerUom) as Integer
                 // An invoice item has a valid quantity when the new quantity is less or equal to the
                 // quantity available to invoice (quantity shipped in uom - quantity invoiced "outside" this invoice item)
-                Integer quantityAvailableToInvoice = quantityShippedInUom - quantityInvoicedOutside
+                BigDecimal quantityAvailableToInvoice = quantityShippedInUom - quantityInvoicedOutside
                 Boolean isValid = quantity <= quantityAvailableToInvoice
                 return isValid ? true : ['invoiceItem.invalidQuantity.label']
             }
@@ -162,7 +162,7 @@ class InvoiceItem implements Serializable {
         return invoice?.isPrepaymentInvoice
     }
 
-    Integer getQuantityAvailableToInvoice() {
+    BigDecimal getQuantityAvailableToInvoice() {
         return shipmentItem ? (shipmentItem.quantityToInvoiceInStandardUom / quantityPerUom) + quantity : null
     }
 

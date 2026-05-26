@@ -14,11 +14,11 @@ class OrderSummary {
     String id
     Order order
 
-    Integer quantityOrdered
-    Integer quantityShipped
-    Integer quantityReceived
-    Integer quantityCanceled
-    Integer quantityInvoiced
+    BigDecimal quantityOrdered
+    BigDecimal quantityShipped
+    BigDecimal quantityReceived
+    BigDecimal quantityCanceled
+    BigDecimal quantityInvoiced
 
     Integer itemsOrdered
     Integer itemsShipped

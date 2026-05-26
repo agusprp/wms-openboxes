@@ -1030,7 +1030,7 @@ class CreateShipmentWorkflowController {
 
                 // see if we have to make copies of this container
                 if (flash.cloneQuantity && flash.cloneContainer) {
-                    shipmentService.copyContainer(flash.cloneContainer, flash.cloneQuantity as Integer)
+                    shipmentService.copyContainer(flash.cloneContainer, flash.cloneQuantity as BigDecimal)
                 }
 
                 valid()
@@ -1457,7 +1457,7 @@ class CreateShipmentWorkflowController {
         def destinations = [:]
         containerIds.each { containerId ->
             def quantityFromForm = params["quantity-" + containerId]
-            def quantity = quantityFromForm ? quantityFromForm as Integer : 0
+            def quantity = quantityFromForm ? quantityFromForm as BigDecimal : 0
 
             if (quantity > 0) {
                 destinations[containerId] = quantity

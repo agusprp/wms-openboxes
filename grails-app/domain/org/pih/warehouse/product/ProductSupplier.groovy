@@ -192,7 +192,7 @@ class ProductSupplier implements Serializable, Comparable<ProductSupplier> {
     }
 
     BigDecimal getEachPrice() {
-        Integer defaultPackageQuantity = defaultProductPackage?.quantity ?: defaultProductPackageDerived?.quantity
+        BigDecimal defaultPackageQuantity = defaultProductPackage?.quantity ?: defaultProductPackageDerived?.quantity
         if (!packagePrice || !defaultPackageQuantity) {
             return 0.0
         }

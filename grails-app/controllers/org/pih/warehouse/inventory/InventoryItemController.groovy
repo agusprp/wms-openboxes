@@ -348,13 +348,13 @@ class InventoryItemController {
             if (!existingItem) {
                 itemsMap.put(it, [
                         quantityRemaining: 0,
-                        quantityPurchased: (it.quantityRemaining * it.quantityPerUom).toInteger(),
+                        quantityPurchased: (it.quantityRemaining * it.quantityPerUom).toBigDecimal(),
                         shipDate         : it.actualReadyDate,
                         type             : 'Purchase Order',
                 ]
                 )
             } else {
-                itemsMap[existingItem.getKey()].quantityPurchased += (it.quantityRemaining * it.quantityPerUom).toInteger()
+                itemsMap[existingItem.getKey()].quantityPurchased += (it.quantityRemaining * it.quantityPerUom).toBigDecimal()
             }
         }
 

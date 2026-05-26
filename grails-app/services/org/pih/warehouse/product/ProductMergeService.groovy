@@ -228,7 +228,7 @@ class ProductMergeService {
             )
             obsoleteAvailableItems?.each { AvailableItem it ->
                 transactionEntries << new TransactionEntry(
-                    quantity: (it.quantityOnHand as Integer),
+                    quantity: (it.quantityOnHand as BigDecimal),
                     product: obsolete,
                     inventoryItem: it.inventoryItem,
                     binLocation: it.binLocation
@@ -243,7 +243,7 @@ class ProductMergeService {
             )
             primaryAvailableItems?.each { AvailableItem it ->
                 transactionEntries << new TransactionEntry(
-                    quantity: (it.quantityOnHand as Integer),
+                    quantity: (it.quantityOnHand as BigDecimal),
                     product: obsolete,
                     inventoryItem: it.inventoryItem,
                     binLocation: it.binLocation

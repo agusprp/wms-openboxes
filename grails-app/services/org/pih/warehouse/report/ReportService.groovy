@@ -769,7 +769,7 @@ class ReportService implements ApplicationContextAware {
             [
                     productId  : it.product?.id,
                     qtyOrderedNotShipped : isOrderItem ? (it.quantityRemaining * it.quantityPerUom) : 0,
-                    qtyShippedNotReceived : isOrderItem ? 0 : it.quantityRemaining.toInteger(),
+                    qtyShippedNotReceived : isOrderItem ? 0 : it.quantityRemaining.toBigDecimal(),
             ]
         }.groupBy { it.productId }.collect { k, v ->
             itemsMap.put(k, [

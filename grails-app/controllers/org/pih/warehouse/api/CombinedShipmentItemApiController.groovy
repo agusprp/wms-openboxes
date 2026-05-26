@@ -165,7 +165,7 @@ class CombinedShipmentItemApiController {
                 .findAll{ it.orderItemStatusCode != OrderItemStatusCode.CANCELED && it.getQuantityRemainingToShip() > 0 }
                 .each {orderItem ->
                     String quantityUom = "${orderItem?.quantityUom?.code?:g.message(code:'default.ea.label')?.toUpperCase()}"
-                    Integer quantityPerUom = orderItem?.quantityPerUom?.toInteger() ?: 1
+                    def quantityPerUom = orderItem?.quantityPerUom ?: 1
                     String unitOfMeasure = "${quantityUom}/${quantityPerUom}"
                     csv << [
                             orderNumber         : orderItem.order.orderNumber,

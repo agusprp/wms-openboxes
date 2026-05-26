@@ -23,9 +23,9 @@ class InventoryItemSnapshot implements java.io.Serializable {
     Product product
     InventoryItem inventoryItem
 
-    Integer quantityOnHand
-    Integer quantityInbound
-    Integer quantityOutbound
+    BigDecimal quantityOnHand
+    BigDecimal quantityInbound
+    BigDecimal quantityOutbound
 
     // Auditing
     Date dateCreated

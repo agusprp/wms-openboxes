@@ -8,13 +8,13 @@ class InventoryAuditSummary implements Serializable {
     Product product
     Location facility
     String abcClass
-    Integer quantityAdjusted = 0
+    BigDecimal quantityAdjusted = BigDecimal.ZERO
     Integer countAdjustments = 0
     Integer countCycleCounts = 0
     BigDecimal amountAdjusted = 0
     Date lastCounted
-    Integer quantityDemanded = 0
-    Integer quantityOnHand = 0
+    BigDecimal quantityDemanded = BigDecimal.ZERO
+    BigDecimal quantityOnHand = BigDecimal.ZERO
     BigDecimal amountOnHand = 0
 
     static mapping = {

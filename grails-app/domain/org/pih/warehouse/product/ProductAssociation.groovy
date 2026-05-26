@@ -30,7 +30,7 @@ class ProductAssociation implements Validatable<ProductAssociationValidator> {
     String id
     ProductAssociationTypeCode code
     Product associatedProduct
-    BigDecimal quantity = 0
+    BigDecimal quantity = BigDecimal.ZERO
     String comments
 
     ProductAssociation mutualAssociation

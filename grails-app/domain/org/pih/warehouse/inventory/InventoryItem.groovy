@@ -49,9 +49,9 @@ class InventoryItem implements Serializable {
 
     String comments
 
-    Integer quantity
-    Integer quantityOnHand
-    Integer quantityAvailableToPromise
+    BigDecimal quantity
+    BigDecimal quantityOnHand
+    BigDecimal quantityAvailableToPromise
 
     Boolean disableRefresh = Boolean.FALSE
 

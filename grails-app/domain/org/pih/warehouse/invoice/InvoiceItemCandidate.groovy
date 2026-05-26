@@ -35,9 +35,9 @@ class InvoiceItemCandidate {
     String supplierCode
     String description
 
-    Integer quantity
-    Integer orderItemQuantity
-    Integer quantityToInvoice
+    BigDecimal quantity
+    BigDecimal orderItemQuantity
+    BigDecimal quantityToInvoice
 
     UnitOfMeasure quantityUom
     BigDecimal unitPrice

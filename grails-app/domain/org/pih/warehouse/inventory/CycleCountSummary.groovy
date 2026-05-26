@@ -24,18 +24,18 @@ class CycleCountSummary implements Serializable {
     // Blind count details
     Date blindCountDateCounted
     Person blindCountAssignee
-    Integer blindCountQuantityOnHand
-    Integer blindCountQuantityCounted
-    Integer blindCountQuantityVariance
+    BigDecimal blindCountQuantityOnHand
+    BigDecimal blindCountQuantityCounted
+    BigDecimal blindCountQuantityVariance
     String blindCountVarianceReasonCode
     String blindCountVarianceComment
 
     // Verification count details
     Date verificationCountDateCounted
     Person verificationCountAssignee
-    Integer verificationCountQuantityOnHand
-    Integer verificationCountQuantityCounted
-    Integer verificationCountQuantityVariance
+    BigDecimal verificationCountQuantityOnHand
+    BigDecimal verificationCountQuantityCounted
+    BigDecimal verificationCountQuantityVariance
     String verificationCountVarianceReasonCode
     String verificationCountVarianceComment
 
@@ -47,7 +47,7 @@ class CycleCountSummary implements Serializable {
         table "cycle_count_summary"
     }
 
-    VarianceTypeCode getVarianceTypeCode(Integer quantityVariance) {
+    VarianceTypeCode getVarianceTypeCode(BigDecimal quantityVariance) {
         if (quantityVariance > 0) return VarianceTypeCode.MORE
         else if (quantityVariance < 0) return VarianceTypeCode.LESS
         else return VarianceTypeCode.EQUAL

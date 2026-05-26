@@ -27,9 +27,9 @@ class CycleCountItem implements Comparable {
 
     CycleCountItemStatus status
 
-    Integer quantityOnHand
+    BigDecimal quantityOnHand
 
-    Integer quantityCounted
+    BigDecimal quantityCounted
 
     ReasonCode discrepancyReasonCode
 
@@ -106,7 +106,7 @@ class CycleCountItem implements Comparable {
         }
     }
 
-    Integer getQuantityVariance() {
+    BigDecimal getQuantityVariance() {
         if (quantityCounted != null && quantityOnHand != null) {
             return quantityCounted - quantityOnHand
         }

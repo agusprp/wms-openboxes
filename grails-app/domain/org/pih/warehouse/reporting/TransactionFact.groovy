@@ -24,7 +24,7 @@ class TransactionFact {
     Date transactionDate
     String transactionNumber
 
-    BigDecimal quantity = 0
+    BigDecimal quantity = BigDecimal.ZERO
 
     static mapping = {
         id generator: 'increment'

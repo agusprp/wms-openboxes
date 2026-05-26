@@ -41,11 +41,11 @@ class PicklistItem implements Serializable {
     InventoryItem inventoryItem
     Location binLocation
 
-    Integer quantityPicked
+    BigDecimal quantityPicked
     Person pickedBy
     Date datePicked
 
-    Integer quantity
+    BigDecimal quantity
 
     String status
     String reasonCode

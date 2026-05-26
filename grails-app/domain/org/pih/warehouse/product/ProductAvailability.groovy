@@ -28,11 +28,11 @@ class ProductAvailability {
     String binLocationName
 
     // Quantities
-    Integer quantityOnHand
-    Integer quantityAllocated
-    Integer quantityOnHold
-    Integer quantityAvailableToPromise
-    Integer quantityNotPicked
+    BigDecimal quantityOnHand
+    BigDecimal quantityAllocated
+    BigDecimal quantityOnHold
+    BigDecimal quantityAvailableToPromise
+    BigDecimal quantityNotPicked
 
     // Auditing
     Date dateCreated

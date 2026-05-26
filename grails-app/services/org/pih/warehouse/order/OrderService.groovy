@@ -632,9 +632,9 @@ class OrderService {
                 productPackage = new ProductPackage()
                 productPackage.product = orderItem.product
                 productPackage.productSupplier = orderItem.productSupplier
-                productPackage.name = "${orderItem?.quantityUom?.code}/${orderItem?.quantityPerUom as Integer}"
+                productPackage.name = "${orderItem?.quantityUom?.code}/${orderItem?.quantityPerUom as BigDecimal}"
                 productPackage.uom = orderItem.quantityUom
-                productPackage.quantity = orderItem.quantityPerUom as Integer
+                productPackage.quantity = orderItem.quantityPerUom
                 ProductPrice productPrice = new ProductPrice()
                 productPrice.price = packagePrice
                 productPackage.productPrice = productPrice

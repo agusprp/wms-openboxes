@@ -17,7 +17,7 @@ class FulfillmentItem implements Serializable {
     String id
 
     // Attributes
-    Integer quantity
+    BigDecimal quantity
     InventoryItem inventoryItem
     RequisitionItem requisitionItem
 

@@ -46,7 +46,7 @@ class OrderItem implements Serializable, Comparable<OrderItem> {
     Category category
     Product product
     InventoryItem inventoryItem
-    Integer quantity
+    BigDecimal quantity
     UnitOfMeasure quantityUom
     BigDecimal quantityPerUom = 1
 
@@ -196,47 +196,47 @@ class OrderItem implements Serializable, Comparable<OrderItem> {
         }
     }
 
-    Integer getQuantityInStandardUom() {
+    BigDecimal getQuantityInStandardUom() {
         return quantity * quantityPerUom
     }
 
-    Integer getQuantityShippedInStandardUom() {
+    BigDecimal getQuantityShippedInStandardUom() {
         return shippedShipmentItems?.sum { ShipmentItem shipmentItem ->
             shipmentItem?.quantity
         }?:0
     }
 
-    Integer getQuantityInShipmentsInStandardUom() {
+    BigDecimal getQuantityInShipmentsInStandardUom() {
         return shipmentItems?.sum { ShipmentItem shipmentItem ->
             shipmentItem?.quantity
         }?:0
     }
 
-    Integer getQuantityReceivedInStandardUom() {
+    BigDecimal getQuantityReceivedInStandardUom() {
         return shippedShipmentItems?.sum { ShipmentItem shipmentItem ->
             shipmentItem?.quantityReceived
         }?:0
     }
 
-    Integer getQuantityCanceledInStandardUom() {
+    BigDecimal getQuantityCanceledInStandardUom() {
         return shippedShipmentItems?.sum { ShipmentItem shipmentItem ->
             shipmentItem?.quantityCanceled
         }?:0
     }
 
-    Integer getQuantityShipped() {
+    BigDecimal getQuantityShipped() {
         return quantityShippedInStandardUom / (quantityPerUom?:1)
     }
 
-    Integer getQuantityReceived() {
+    BigDecimal getQuantityReceived() {
         return quantityReceivedInStandardUom / (quantityPerUom?:1)
     }
 
-    Integer getQuantityCanceled() {
+    BigDecimal getQuantityCanceled() {
         return quantityCanceledInStandardUom / (quantityPerUom?:1)
     }
 
-    Integer getQuantityInShipments() {
+    BigDecimal getQuantityInShipments() {
         return quantityInShipmentsInStandardUom / (quantityPerUom?:1)
     }
 
@@ -244,7 +244,7 @@ class OrderItem implements Serializable, Comparable<OrderItem> {
         return "Product"
     }
 
-    Integer getQuantityRemainingToShip(Shipment shipment) {
+    BigDecimal getQuantityRemainingToShip(Shipment shipment) {
         def quantityInOtherShipments = shipmentItems?.findAll { it.shipment != shipment}?.sum { ShipmentItem shipmentItem ->
             shipmentItem?.quantity
         }
@@ -252,7 +252,7 @@ class OrderItem implements Serializable, Comparable<OrderItem> {
         return quantityRemaining > 0 ? quantityRemaining : 0
     }
 
-    Integer getQuantityRemaining() {
+    BigDecimal getQuantityRemaining() {
         if (canceled) {
             return 0
         }
@@ -304,18 +304,18 @@ class OrderItem implements Serializable, Comparable<OrderItem> {
     }
 
     // Including not yet posted invoices
-    Integer getQuantityInvoiced() {
+    BigDecimal getQuantityInvoiced() {
         return allInvoiceItems
                 ?.findAll { !it?.invoice?.isPrepaymentInvoice && !it.inverse }
                 ?.sum { it.quantity } ?: 0
     }
 
     // Including not yet posted invoices
-    Integer getQuantityInvoicedInStandardUom() {
+    BigDecimal getQuantityInvoicedInStandardUom() {
         return quantityInvoiced * (quantityPerUom ?: 1)
     }
 
-    Integer getQuantityAvailableToInvoice() {
+    BigDecimal getQuantityAvailableToInvoice() {
         return canceled
                 ? null
                 : quantityShippedInStandardUom - quantityInvoicedInStandardUom
@@ -415,7 +415,7 @@ class OrderItem implements Serializable, Comparable<OrderItem> {
     }
 
     // Check quantity (standard uom) in posted invoices
-    Integer getPostedQuantityInvoicedInStandardUom() {
+    BigDecimal getPostedQuantityInvoicedInStandardUom() {
         return postedQuantityInvoiced * (quantityPerUom ?: 1)
     }
 
@@ -435,7 +435,7 @@ class OrderItem implements Serializable, Comparable<OrderItem> {
         return invoices.any { it.invoiceType == null || it.invoiceType?.code == InvoiceTypeCode.INVOICE }
     }
 
-    Integer getPostedQuantityInvoiced() {
+    BigDecimal getPostedQuantityInvoiced() {
         return allInvoiceItems?.findAll {
             it?.invoice?.datePosted != null && !it?.invoice?.isPrepaymentInvoice && !it.inverse
         }?.sum { it.quantity } ?: 0

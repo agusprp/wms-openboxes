@@ -8,12 +8,12 @@ class Requirement implements Serializable {
     Product product
     Location location
     Location binLocation
-    Integer quantityInBin // QoH in bin
-    Integer minQuantity
-    Integer maxQuantity
-    Integer reorderQuantity
-    Integer totalQuantityAvailableToPromise // Total QATP for this product in Depot
-    Integer quantityAvailable // quantityAvailable = quantity available to replenish = total qatp - qatp in bin
+    BigDecimal quantityInBin // QoH in bin
+    BigDecimal minQuantity
+    BigDecimal maxQuantity
+    BigDecimal reorderQuantity
+    BigDecimal totalQuantityAvailableToPromise // Total QATP for this product in Depot
+    BigDecimal quantityAvailable // quantityAvailable = quantity available to replenish = total qatp - qatp in bin
     InventoryLevelStatus status
 
     static mapping = {

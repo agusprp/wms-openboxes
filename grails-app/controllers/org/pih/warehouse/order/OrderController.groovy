@@ -769,7 +769,7 @@ class OrderController {
             if (!orderService.isOrderEditable(orderItem.order, session.user)) {
                 throw new UnsupportedOperationException("${warehouse.message(code: 'errors.noPermissions.label')}")
             }
-            if (params.quantity && orderItem.quantity != (params.quantity as Integer)) {
+            if (params.quantity && orderItem.quantity != (params.quantity as BigDecimal)) {
                 // if existing item's quantity is edited we have to trigger the order summary refresh
                 orderItem.disableRefresh = false
             }

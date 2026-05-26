@@ -416,7 +416,7 @@ class InventoryImportDataService implements ImportDataService {
                     ? productAvailabilityService.getQuantityOnHand(inventoryItem)
                     : 0
 
-            Integer quantityToImport = entry['quantity'] as Integer
+            def quantityToImport = entry['quantity']
 
             if (quantityToImport > currentQuantity) {
                 return entry
@@ -445,7 +445,7 @@ class InventoryImportDataService implements ImportDataService {
             rows.computeIfAbsent(key, { k -> [] }).add(new InventoryImportDataRow(
                     binLocation,
                     inventoryItem,
-                    rowRaw.quantity.toInteger() as Integer,
+                    rowRaw.quantity.toBigDecimal(),
                     rowRaw.comments as String))
         }
 

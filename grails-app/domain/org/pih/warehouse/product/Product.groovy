@@ -524,7 +524,7 @@ class Product implements Comparable, Serializable, Validatable<ProductValidator>
      * @param currentQuantity
      * @return
      */
-    def getStatus(String locationId, Integer currentQuantity) {
+    def getStatus(String locationId, BigDecimal currentQuantity) {
         def inventoryLevel = getInventoryLevel(locationId)
         return inventoryLevel?.statusMessage(currentQuantity)
     }
