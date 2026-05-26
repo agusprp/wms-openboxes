@@ -2,11 +2,11 @@
 
 > **Issue:** [#1 Change Integer quantity fields to BigDecimal](https://github.com/agusprp/wms-openboxes/issues/1)
 > **Branch:** `feature/int-to-decimal-quantity`
-> **Commit:** `04e5ee09d`
+> **Commits:** `04e5ee09d` + `4884ad8e2` + `cd4ec722d`
 
 ## Ringkasan
 
-Mengubah semua field quantity dari `Integer` menjadi `BigDecimal` (DB: `int(11)` → `decimal(19,3)`) di seluruh domain, service, dan controller OpenBoxes. Total **52 files** diubah.
+Mengubah semua field quantity dari `Integer` menjadi `BigDecimal` (DB: `int(11)` → `decimal(19,3)`) di seluruh domain, service, dan controller OpenBoxes. Total **52 files** diubah (+ 3 commit follow-up fixes).
 
 ---
 
@@ -56,7 +56,7 @@ Mengubah semua field quantity dari `Integer` menjadi `BigDecimal` (DB: `int(11)`
 ### 5. `CycleCountSummary.groovy`
 - **Lokasi:** `grails-app/domain/org/pih/warehouse/inventory/CycleCountSummary.groovy`
 - **Fungsi file:** Ringkasan hasil cycle count
-- **Sama dengan CycleCountDetails:** 6 fields + 1 method parameter `quantityVariance` (line 50)
+- **Field/method diubah:** 6 fields + 1 method parameter `quantityVariance` (line 50)
 
 ### 6. `InventoryAuditDetails.groovy`
 - **Lokasi:** `grails-app/domain/org/pih/warehouse/inventory/InventoryAuditDetails.groovy`
@@ -342,15 +342,15 @@ Mengubah semua field quantity dari `Integer` menjadi `BigDecimal` (DB: `int(11)`
 
 ### 1. `CombinedShipmentItemApiController.groovy`
 - **Lokasi:** `grails-app/controllers/org/pih/warehouse/api/CombinedShipmentItemApiController.groovy`
-- **Fungsi file:** API untuk combined shipment items (menggabungkan beberapa shipment)
-- **Method diubah:** anonymous block di action
+- **Fungsi file:** API untuk combined shipment items
+- **Method:** anonymous block di action
   | Lokasi (line baru) | Perubahan | Alasan |
   |---|---|---|
   | 168 | `Integer quantityPerUom = orderItem?.quantityPerUom?.toInteger()` → `def quantityPerUom = orderItem?.quantityPerUom` | `.quantityPerUom` skrg `BigDecimal` |
 
 ### 2. `PartialReceivingApiController.groovy`
 - **Lokasi:** `grails-app/controllers/org/pih/warehouse/api/PartialReceivingApiController.groovy`
-- **Fungsi file:** API untuk partial receiving (terima barang sebagian)
+- **Fungsi file:** API untuk partial receiving
 - **Method:** action block
   | Lokasi (line baru) | Perubahan | Alasan |
   |---|---|---|
@@ -460,6 +460,7 @@ Mengubah semua field quantity dari `Integer` menjadi `BigDecimal` (DB: `int(11)`
 ### `changelog-2026-05-26-1600-change-integer-quantity-to-decimal.xml`
 - **Lokasi:** `grails-app/migrations/0.9.x/changelog-2026-05-26-1600-change-integer-quantity-to-decimal.xml`
 - **Fungsi:** Migrasi DB — ubah `int(11)` → `decimal(19,3)` untuk 28+ kolom
+- **Catatan:** Awalnya pakai `<modifyDataType>` tapi tidak support di Liquibase 1.9 XSD. Diganti ke `<modifyColumn>`.
 - **Tabel yang diubah:**
 
 | Tabel | Kolom |
@@ -469,7 +470,6 @@ Mengubah semua field quantity dari `Integer` menjadi `BigDecimal` (DB: `int(11)`
 | `fulfillment_item` | `quantity` |
 | `receipt_item` | `quantity_shipped`, `quantity_received`, `quantity_canceled` |
 | `inventory_snapshot` | `quantity_on_hand`, `quantity_inbound`, `quantity_outbound` |
-| `inventory_item` | `quantity`, `quantity_on_hand`, `quantity_available_to_promise` |
 | `inventory_item_snapshot` | `quantity_on_hand`, `quantity_inbound`, `quantity_outbound`, `quantity_available_to_promise` |
 | `transaction_entry` | `quantity` |
 | `invoice_item` | `quantity` |
@@ -478,8 +478,6 @@ Mengubah semua field quantity dari `Integer` menjadi `BigDecimal` (DB: `int(11)`
 | `product_availability` | `quantity_on_hand`, `quantity_allocated`, `quantity_on_hold`, `quantity_available_to_promise` |
 | `picklist_item` | `quantity`, `quantity_picked` |
 | `cycle_count_item` | `quantity_on_hand`, `quantity_counted` |
-
-> Manual ALTER langsung ke database berjalan juga sudah dijalankan.
 
 ---
 
@@ -498,8 +496,59 @@ Tabel-tabel berikut adalah VIEW (bukan BASE TABLE), kolomnya akan otomatis mengi
 
 ---
 
+## F. Constraint Fixes (commit `cd4ec722d`)
+
+Setelah domain class diubah jadi `BigDecimal`, Grails validation `min:` dan `range:` yang tadinya pakai `Integer` literal perlu disesuaikan.
+
+### Files yang diubah:
+
+| File | Line | Sebelum | Sesudah | Alasan |
+|---|---|---|---|---|
+| `OrderItem.groovy` | 144 | `quantity(min: 1)` | `quantity(min: 1L)` | Constraint value harus kompatibel dengan BigDecimal |
+| `InvoiceItem.groovy` | 83 | `quantity(min: 0)` | `quantity(min: 0L)` | Sama |
+| `RequisitionItem.groovy` | 133 | `quantity(min: 0)` | `quantity(min: 0L)` | Sama |
+| `ShipmentItem.groovy` | 94 | `quantity(min: 0, range: 0..2147483646)` | `quantity(min: 0L, range: 0L..2147483646L)` | Range juga harus Long |
+| `ReceiptItem.groovy` | 61 | `quantityShipped(range: 0..2147483646)` | `quantityShipped(range: 0L..2147483646L)` | Sama |
+| `InventoryLevel.groovy` | 97-100 | `range: 0..2147483646` | `range: 0L..2147483646L` | Sama untuk minQuantity, reorderQuantity, maxQuantity, forecastQuantity |
+
+---
+
+## G. Build & Deployment
+
+### Build WAR
+```bash
+# Build executable WAR (Spring Boot repackage)
+./gradlew bootRepackage -x generateGitProperties --no-daemon
+
+# Skip webpack untuk build lebih cepat (hanya backend)
+./gradlew bootRepackage -x generateGitProperties -x npm_run_bundle --no-daemon
+```
+
+### Build Docker Image
+```bash
+cp build/libs/openboxes.war docker/
+docker build -t wms-openboxes:custom docker/ -f docker/Dockerfile
+```
+
+### docker-compose.yml
+```yaml
+services:
+  app:
+    image: wms-openboxes:custom   # ganti ghcr.io/openboxes/openboxes:latest
+    ...
+```
+
+### Catatan Docker
+- Base image: `eclipse-temurin:8-jre-jammy`
+- Entrypoint: `java -Dgrails.env=prod -jar /app/openboxes.war`
+- Harus pakai `bootRepackage` biar WAR executable (punya Main-Class: WarLauncher)
+
+---
+
 ## Catatan Penting
 
 1. **Kompilasi:** `./gradlew compileGroovy` — ✅ SUCCESS (0 error)
-2. **Docker saat ini** masih pakai pre-built image `ghcr.io/openboxes/openboxes:latest` — domain class-nya masih `Integer`. DB columns diubah manual via ALTER. **Decimal akan bekerja penuh setelah custom image dibangun.**
-3. **Testing:** Login + dashboard + order detail page — ✅ OK (no 500 errors)
+2. **Docker custom image:** ✅ Sudah build dan running (`wms-openboxes:custom`)
+3. **DB columns:** Semua kolom quantity diubah manual via ALTER ke `decimal(19,3)` ✅
+4. **Constraint validation:** `min:` dan `range:` pake `Long` literal (`1L`, `0L`) biar kompatibel dengan BigDecimal ✅
+5. **Testing:** Login + dashboard + PO list — ✅ OK. Input decimal 12.233 perlu dicek di UI.
