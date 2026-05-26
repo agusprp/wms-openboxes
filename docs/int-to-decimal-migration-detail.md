@@ -504,12 +504,12 @@ Setelah domain class diubah jadi `BigDecimal`, Grails validation `min:` dan `ran
 
 | File | Line | Sebelum | Sesudah | Alasan |
 |---|---|---|---|---|
-| `OrderItem.groovy` | 144 | `quantity(min: 1)` | `quantity(min: 1L)` | Constraint value harus kompatibel dengan BigDecimal |
-| `InvoiceItem.groovy` | 83 | `quantity(min: 0)` | `quantity(min: 0L)` | Sama |
-| `RequisitionItem.groovy` | 133 | `quantity(min: 0)` | `quantity(min: 0L)` | Sama |
-| `ShipmentItem.groovy` | 94 | `quantity(min: 0, range: 0..2147483646)` | `quantity(min: 0L, range: 0L..2147483646L)` | Range juga harus Long |
-| `ReceiptItem.groovy` | 61 | `quantityShipped(range: 0..2147483646)` | `quantityShipped(range: 0L..2147483646L)` | Sama |
-| `InventoryLevel.groovy` | 97-100 | `range: 0..2147483646` | `range: 0L..2147483646L` | Sama untuk minQuantity, reorderQuantity, maxQuantity, forecastQuantity |
+| `OrderItem.groovy` | 144 | `quantity(min: 1)` | `quantity(min: 1.0)` | Constraint value harus kompatibel dengan BigDecimal |
+| `InvoiceItem.groovy` | 83 | `quantity(min: 0)` | `quantity(min: 0.0)` | Sama |
+| `RequisitionItem.groovy` | 133 | `quantity(min: 0)` | `quantity(min: 0.0)` | Sama |
+| `ShipmentItem.groovy` | 94 | `quantity(min: 0, range: 0..2147483646)` | `quantity(min: 0.0, range: 0.0..2147483646.0)` | Range BigDecimal literal |
+| `ReceiptItem.groovy` | 61 | `quantityShipped(range: 0..2147483646)` | `quantityShipped(range: 0.0..2147483646.0)` | Sama |
+| `InventoryLevel.groovy` | 97-100 | `range: 0..2147483646` | `range: 0.0..2147483646.0` | Sama untuk minQuantity, reorderQuantity, maxQuantity, forecastQuantity |
 
 ---
 
@@ -550,5 +550,5 @@ services:
 1. **Kompilasi:** `./gradlew compileGroovy` — ✅ SUCCESS (0 error)
 2. **Docker custom image:** ✅ Sudah build dan running (`wms-openboxes:custom`)
 3. **DB columns:** Semua kolom quantity diubah manual via ALTER ke `decimal(19,3)` ✅
-4. **Constraint validation:** `min:` dan `range:` pake `Long` literal (`1L`, `0L`) biar kompatibel dengan BigDecimal ✅
+4. **Constraint validation:** `min:` dan `range:` pake BigDecimal literal (`1.0`, `0.0`) biar kompatibel dengan property type ✅
 5. **Testing:** Login + dashboard + PO list — ✅ OK. Input decimal 12.233 perlu dicek di UI.
