@@ -39,7 +39,7 @@
                             </g:link>
                         </td>
                         <td class="center">
-                            ${g.formatNumber(number: quantityAvailable, format: '###,###,###') }
+                            ${g.formatNumber(number: quantityAvailable, format: '###,###,###.###') }
                             ${associatedProduct.unitOfMeasure}
                         </td>
                         <td class="border-right middle center">
@@ -72,7 +72,7 @@
                         <g:if test="${totalQuantity < 0}">
                             <g:set var="styleClass" value="color: red;"/>
                         </g:if>
-                        <span style="${styleClass }" id="totalQuantity">${g.formatNumber(number: totalQuantity, format: '###,###,###') }</span>
+                        <span style="${styleClass }" id="totalQuantity">${g.formatNumber(number: totalQuantity, format: '###,###,###.###') }</span>
                     </span>
                     <g:if test="${product?.unitOfMeasure }">
                         <format:metadata obj="${product?.unitOfMeasure}"/>

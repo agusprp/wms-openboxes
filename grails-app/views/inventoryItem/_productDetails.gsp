@@ -20,7 +20,7 @@
                 </td>
                 <td class="value">
                     <div>
-                        ${g.formatNumber(number: totalQuantity, format: '###,###,###') }
+                        ${g.formatNumber(number: totalQuantity, format: '###,###,###.###') }
                         <g:if test="${productInstance?.unitOfMeasure }">
                             <format:metadata obj="${productInstance?.unitOfMeasure}"/>
                         </g:if>
@@ -50,7 +50,7 @@
                     </td>
                     <td class="value">
                         <div>
-                            ${g.formatNumber(number: totalQuantityAvailableToPromise, format: '###,###,###') }
+                            ${g.formatNumber(number: totalQuantityAvailableToPromise, format: '###,###,###.###') }
                         </div>
                     </td>
                 </tr>
@@ -92,7 +92,7 @@
                             <label><warehouse:message code="inventoryLevel.minQuantity.label"/></label>
                         </td>
                         <td class="value">
-                            ${g.formatNumber(number: inventoryLevel?.minQuantity?:0, format: '###,###,###') }
+                            ${g.formatNumber(number: inventoryLevel?.minQuantity?:0, format: '###,###,###.###') }
                             <g:if test="${productInstance?.unitOfMeasure }">
                                 <format:metadata obj="${productInstance?.unitOfMeasure}"/>
                             </g:if>
@@ -110,7 +110,7 @@
                         </td>
                         <td class="value" id="forecastQuantity">
                             <div>
-                                ${g.formatNumber(number: inventoryLevel?.monthlyForecastQuantity?:0, format: '###,###,###') }
+                                ${g.formatNumber(number: inventoryLevel?.monthlyForecastQuantity?:0, format: '###,###,###.###') }
                                 <g:message code="default.perMonth.label" default="per month"/>
                             </div>
                         </td>
@@ -122,7 +122,7 @@
                             <label><warehouse:message code="inventoryLevel.reorderQuantity.label"/></label>
                         </td>
                         <td class="value">
-                            ${g.formatNumber(number: inventoryLevel?.reorderQuantity?:0, format: '###,###,###') }
+                            ${g.formatNumber(number: inventoryLevel?.reorderQuantity?:0, format: '###,###,###.###') }
                             <g:if test="${productInstance?.unitOfMeasure }">
                                 <format:metadata obj="${productInstance?.unitOfMeasure}"/>
                             </g:if>
@@ -138,7 +138,7 @@
                             <label><warehouse:message code="inventoryLevel.maxQuantity.label"/></label>
                         </td>
                         <td class="value">
-                            ${g.formatNumber(number: inventoryLevel?.maxQuantity?:0, format: '###,###,###') }
+                            ${g.formatNumber(number: inventoryLevel?.maxQuantity?:0, format: '###,###,###.###') }
                             <g:if test="${productInstance?.unitOfMeasure }">
                                 <format:metadata obj="${productInstance?.unitOfMeasure}"/>
                             </g:if>

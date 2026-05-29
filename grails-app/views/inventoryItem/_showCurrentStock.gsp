@@ -65,11 +65,11 @@
                         <g:expirationDate date="${entry?.inventoryItem?.expirationDate}"/>
                     </td>
                     <td>
-                        ${g.formatNumber(number: entry?.quantityOnHand, format: '###,###,###') }
+                        ${g.formatNumber(number: entry?.quantityOnHand, format: '###,###,###.###') }
                         ${entry?.inventoryItem?.product?.unitOfMeasure}
                     </td>
                     <td>
-                        ${g.formatNumber(number: entry?.quantityAvailable, format: '###,###,###') }
+                        ${g.formatNumber(number: entry?.quantityAvailable, format: '###,###,###.###') }
                         ${entry?.inventoryItem?.product?.unitOfMeasure}
                     </td>
                     <td>
@@ -107,7 +107,7 @@
                             <g:set var="styleClass" value="color: red;"/>
                         </g:if>
                         <span style="${styleClass }" id="totalQuantity">
-                            ${g.formatNumber(number: commandInstance.totalQuantity, format: '###,###,###') }
+                            ${g.formatNumber(number: commandInstance.totalQuantity, format: '###,###,###.###') }
                         </span>
                         <span class="">
                             <g:if test="${commandInstance?.product?.unitOfMeasure }">
@@ -126,7 +126,7 @@
                             <g:set var="styleClass" value="color: red;"/>
                         </g:if>
                         <span style="${styleClass }" id="totalQuantityAvailableToPromise">
-                            ${g.formatNumber(number: commandInstance.totalQuantityAvailableToPromise, format: '###,###,###') }
+                            ${g.formatNumber(number: commandInstance.totalQuantityAvailableToPromise, format: '###,###,###.###') }
                         </span>
                         <span class="">
                             <g:if test="${commandInstance?.product?.unitOfMeasure }">
