@@ -624,3 +624,68 @@ Format `###,##0.00`, `###,##0.00##`, `###,##0.####` untuk **price/totalValue** f
 
 1. **Format `###,##0.###`:** Menampilkan min 0 dan maks 3 angka decimal. Contoh: `0` → `0`, `0.5` → `0.5`, `1.234` → `1.234`.
 2. **Build ulang diperlukan:** Perubahan hanya di GSP, cukup rebuild WAR + redeploy. Tidak perlu migrasi DB.
+
+---
+
+## I. Service & Command Fixes — Integer → BigDecimal Return Types (PR #3)
+
+> **Issue:** [#1](https://github.com/agusprp/wms-openboxes/issues/1) (follow-up) — StockCard throw ClassCastException
+> **Branch:** `bugfix/packing-list-decimal-display` (merged to `feature/int-to-decimal-quantity`)
+
+### Latar Belakang
+
+Setelah domain fields berubah dari `Integer` ke `BigDecimal`, beberapa Command class dan Service method masih mendeklarasikan tipe return `Integer`. Akibatnya halaman Stock Card (`showStockCard`) throw `ClassCastException: java.lang.Integer cannot be cast to java.math.BigDecimal`.
+
+### Perubahan
+
+#### 1. `StockCardCommand.groovy`
+
+| Field | Sebelum | Sesudah |
+|---|---|---|
+| `totalQuantity` | `Integer` | `BigDecimal` |
+| `totalQuantityAvailableToPromise` | `Integer` | `BigDecimal` |
+| `quantityByInventoryItemMap` | `Map<InventoryItem, Integer>` | `Map<InventoryItem, BigDecimal>` |
+
+#### 2. `InventoryService.groovy` — Method Signatures
+
+11 method signatures diubah dari `Integer` ke `BigDecimal`:
+
+| Method | Perubahan |
+|---|---|
+| `getQuantity(Location, Product, String)` | `Integer` → `BigDecimal` |
+| `getQuantityAvailableToPromise(Location, Product)` | `Integer` → `BigDecimal` |
+| `getQuantityOnHand(Location, Product)` | `Integer` → `BigDecimal` |
+| `getQuantityToReceive(Location, Product)` | `Integer` → `BigDecimal` |
+| `getQuantityToShip(Location, Product)` | `Integer` → `BigDecimal` |
+| `getQuantityFromBinLocation(Location, Location, InventoryItem)` | `Integer` → `BigDecimal` |
+| `getQuantity(Inventory, InventoryItem)` | `Integer` → `BigDecimal` |
+| `getQuantity(Inventory, Location, InventoryItem)` | `Integer` → `BigDecimal` |
+| `getQuantityAvailableToPromise(InventoryItem)` | `Integer` → `BigDecimal` |
+| `getQuantityAvailableToPromise(Inventory, InventoryItem)` | `Integer` → `BigDecimal` |
+| `getQuantityAvailableToPromise(Product, Location)` | `Integer` → `BigDecimal` |
+| `getQuantityByProductMap(List<TransactionEntry>)` | `Map<Product, Integer>` → `Map<Product, BigDecimal>` |
+| `getQuantityByProductMap(String)` | `Map<Product, Integer>` → `Map<Product, BigDecimal>` |
+| `getQuantityByProductMap(Location)` | `Map<Product, Integer>` → `Map<Product, BigDecimal>` |
+| `getQuantityByInventoryItemMap(List<TransactionEntry>)` | `Map<InventoryItem, Integer>` → `Map<InventoryItem, BigDecimal>` |
+| `getQuantityByProductAndInventoryItemMap(List<TransactionEntry>)` | `Map<Product, Map<InventoryItem, Integer>>` → `Map<Product, Map<InventoryItem, BigDecimal>>` |
+| Local variable `quantity` (line 1159) | `Integer quantity` → `def quantity` |
+| Local variable `quantityAvailable` (line 1275) | `Integer quantityAvailable` → `def quantityAvailable` |
+| Local variables `totalNewQty`, `existingOldQty` (line 1392-1393) | `Integer` → `def` |
+| Local variable `quantityOnHand` (line 1975) | `Integer quantityOnHand` → `def quantityOnHand` |
+| `reorderProductsQuantityMap`, `minimumProductsQuantityMap` | `Map<Product, Integer>` → `Map<Product, BigDecimal>` |
+| Local variable `totalQuantityLostToExpiry` (line 3429) | `Integer` → `def` |
+
+### 3. GSP Format Fixes (Inventory Item Views)
+
+| File | Lines | Format |
+|---|---|---|
+| `inventoryItem/_productDetails.gsp` | 23, 37, 53, 95, 113, 125, 141 | `###,###,###` → `###,###,###.###` |
+| `inventoryItem/_showCurrentStock.gsp` | 68, 72, 110, 129 | `###,###,###` → `###,###,###.###` |
+| `inventoryItem/_showProductAssociations.gsp` | 42, 75 | `###,###,###` → `###,###,###.###` |
+
+### Catatan
+
+1. **Tidak ada perubahan logika bisnis** — hanya tipe deklarasi yang disesuaikan.
+2. **Groovy handling:** Local variables pakai `def` agar tipe otomatis mengikuti nilai yang diberikan.
+3. **Map types:** Value type di map generics disesuaikan dari `Integer` ke `BigDecimal`.
+4. **Format display:** 3 digit decimal untuk quantity, sesuai DB precision `decimal(19,3)`.
