@@ -69,7 +69,7 @@
                             <format:product product="${shipmentItem?.inventoryItem?.product}" />
                         </td>
                         <td class="center">
-                            <g:formatNumber number="${shipmentItem.quantity}" format="###,##0" />
+                            <g:formatNumber number="${shipmentItem.quantity}" format="###,##0.###"/>
                         </td>
                     </tr>
                 </g:each>

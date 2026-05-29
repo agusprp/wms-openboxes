@@ -445,15 +445,15 @@
 
                                                 </td>
                                                 <td class="center quantity">
-                                                    <g:formatNumber number="${shipmentItem?.quantity}" format="###,##0" />
+                                                    <g:formatNumber number="${shipmentItem?.quantity}" format="###,##0.###"/>
 
                                                 </td>
                                                 <g:if test="${shipmentInstance?.wasReceived()}">
                                                     <td class="center" style="white-space:nowrap;${shipmentItem?.quantityReceived() != shipmentItem?.quantity ? ' color:red;' : ''}">
-                                                        <g:formatNumber number="${shipmentItem?.quantityReceived()}" format="###,##0"/>
+                                                        <g:formatNumber number="${shipmentItem?.quantityReceived()}" format="###,##0.###"/>
                                                     </td>
                                                     <td class="center" style="white-space:nowrap;${shipmentItem?.quantityReceived() != shipmentItem?.quantity ? ' color:red;' : ''}">
-                                                        <g:formatNumber number="${shipmentItem?.quantityCanceled()}" format="###,##0"/>
+                                                        <g:formatNumber number="${shipmentItem?.quantityCanceled()}" format="###,##0.###"/>
                                                     </td>
 
                                                 </g:if>
