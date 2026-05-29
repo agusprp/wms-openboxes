@@ -264,7 +264,7 @@ class InventoryService implements ApplicationContextAware {
     Map getQuantityByInventoryAndProduct(Inventory inventory, Product product) {
         Map inventoryItemQuantity = [:]
         Set inventoryItems = getInventoryItemsByProductAndInventory(product, inventory)
-        Map<InventoryItem, Integer> quantityMap = getQuantityForInventory(inventory)
+        Map<InventoryItem, BigDecimal> quantityMap = getQuantityForInventory(inventory)
 
         inventoryItems.each {
             def quantity = quantityMap[it]
@@ -567,7 +567,7 @@ class InventoryService implements ApplicationContextAware {
      * @param lotNumber
      * @return
      */
-    Integer getQuantity(Location location, Product product, String lotNumber) {
+    BigDecimal getQuantity(Location location, Product product, String lotNumber) {
 
         log.info("Get quantity for product " + product?.name + " lotNumber " + lotNumber + " at location " + location?.name)
         if (!location) {
@@ -582,7 +582,7 @@ class InventoryService implements ApplicationContextAware {
         return getQuantity(location.inventory, inventoryItem)
     }
 
-    Map<Product, Map<InventoryItem, Integer>> getQuantityByProductAndInventoryItemMap(List<TransactionEntry> entries) {
+    Map<Product, Map<InventoryItem, BigDecimal>> getQuantityByProductAndInventoryItemMap(List<TransactionEntry> entries) {
         return getQuantityByProductAndInventoryItemMap(entries, false)
     }
 
@@ -713,7 +713,7 @@ class InventoryService implements ApplicationContextAware {
      * @param entries
      * @return
      */
-    Map<Product, Integer> getQuantityByProductMap(List<TransactionEntry> entries) {
+    Map<Product, BigDecimal> getQuantityByProductMap(List<TransactionEntry> entries) {
         def startTime = System.currentTimeMillis()
         def quantityMap = [:]
 
@@ -747,9 +747,9 @@ class InventoryService implements ApplicationContextAware {
      * @param entries
      * @return
      */
-    Map<InventoryItem, Integer> getQuantityByInventoryItemMap(List<TransactionEntry> entries) {
+    Map<InventoryItem, BigDecimal> getQuantityByInventoryItemMap(List<TransactionEntry> entries) {
         def startTime = System.currentTimeMillis()
-        Map<InventoryItem, Integer> quantityMap = [:]
+        Map<InventoryItem, BigDecimal> quantityMap = [:]
 
         // first get the quantity and inventory item map
         def quantityByProductAndInventoryItemMap =
@@ -951,18 +951,18 @@ class InventoryService implements ApplicationContextAware {
      * @param inventoryInstance
      * @return
      */
-    Map<Product, Integer> getQuantityByProductMap(String locationId) {
+    Map<Product, BigDecimal> getQuantityByProductMap(String locationId) {
         def location = Location.get(locationId)
         return getQuantityByProductMap(location.inventory)
     }
 
-    Map<Product, Integer> getQuantityByProductMap(Location location) {
+    Map<Product, BigDecimal> getQuantityByProductMap(Location location) {
         return getQuantityByProductMap(location.inventory)
     }
 
 
     //@Cacheable("quantityOnHandCache")
-    Map<Product, Integer> getQuantityByProductMap(Inventory inventory) {
+    Map<Product, BigDecimal> getQuantityByProductMap(Inventory inventory) {
         def startTime = System.currentTimeMillis()
         def transactionEntries = getTransactionEntriesByInventory(inventory)
         def quantityMap = getQuantityByProductMap(transactionEntries)
@@ -988,7 +988,7 @@ class InventoryService implements ApplicationContextAware {
      * @param products
      * @return
      */
-    Map<Product, Integer> getQuantityByProductMap(Location location, List<Product> products) {
+    Map<Product, BigDecimal> getQuantityByProductMap(Location location, List<Product> products) {
         return getQuantityByProductMap(location.inventory, products)
     }
 
@@ -998,7 +998,7 @@ class InventoryService implements ApplicationContextAware {
      * @param inventoryInstance
      * @return
      */
-    Map<Product, Integer> getQuantityByProductMap(Inventory inventory, List<Product> products) {
+    Map<Product, BigDecimal> getQuantityByProductMap(Inventory inventory, List<Product> products) {
         long startTime = System.currentTimeMillis()
         log.debug "get quantity by product map "
 
@@ -1035,8 +1035,8 @@ class InventoryService implements ApplicationContextAware {
         long startTime = System.currentTimeMillis()
         def inventoryLevels = getInventoryLevelsByInventory(inventoryInstance)
 
-        Map<Product, Integer> reorderProductsQuantityMap = new HashMap<Product, Integer>()
-        Map<Product, Integer> minimumProductsQuantityMap = new HashMap<Product, Integer>()
+        Map<Product, BigDecimal> reorderProductsQuantityMap = new HashMap<Product, BigDecimal>()
+        Map<Product, BigDecimal> minimumProductsQuantityMap = new HashMap<Product, BigDecimal>()
 
         for (level in inventoryLevels) {
 
@@ -1074,7 +1074,7 @@ class InventoryService implements ApplicationContextAware {
      * @param product
      * @return get quantity by location and product
      */
-    Integer getQuantityAvailableToPromise(Location location, Product product) {
+    BigDecimal getQuantityAvailableToPromise(Location location, Product product) {
         def quantityMap = getQuantityForProducts(location.inventory, [product.id])
         log.debug "quantity map " + quantityMap
         def quantityOnHand = getQuantityOnHand(location, product) ?: 0
@@ -1089,7 +1089,7 @@ class InventoryService implements ApplicationContextAware {
      * @param product
      * @return get quantity by location and product
      */
-    Integer getQuantityOnHand(Location location, Product product) {
+    BigDecimal getQuantityOnHand(Location location, Product product) {
         log.debug "quantity on hand for location " + location + " product " + product
         def quantityMap = getQuantityForProducts(location.inventory, [product.id])
         log.debug "quantity map " + quantityMap
@@ -1098,13 +1098,13 @@ class InventoryService implements ApplicationContextAware {
         return quantity ?: 0
     }
 
-    Integer getQuantityToReceive(Location location, Product product) {
+    BigDecimal getQuantityToReceive(Location location, Product product) {
         Map quantityMap = getIncomingQuantityByProduct(location, [product])
         def quantity = quantityMap[product]
         return quantity ?: 0
     }
 
-    Integer getQuantityToShip(Location location, Product product) {
+    BigDecimal getQuantityToShip(Location location, Product product) {
         Map quantityMap = getOutgoingQuantityByProduct(location, [product])
         def quantity = quantityMap[product]
         return quantity ?: 0
@@ -1115,7 +1115,7 @@ class InventoryService implements ApplicationContextAware {
      * @param inventoryItem
      * @return current quantity of the given inventory item.
      */
-    Integer getQuantityFromBinLocation(Location location, Location binLocation, InventoryItem inventoryItem) {
+    BigDecimal getQuantityFromBinLocation(Location location, Location binLocation, InventoryItem inventoryItem) {
         def startTime = System.currentTimeMillis()
         def quantity = getQuantity(location.inventory, binLocation, inventoryItem)
         log.info "getQuantity(): " + (System.currentTimeMillis() - startTime) + " ms"
@@ -1123,7 +1123,7 @@ class InventoryService implements ApplicationContextAware {
     }
 
 
-    Integer getQuantity(Inventory inventory, InventoryItem inventoryItem) {
+    BigDecimal getQuantity(Inventory inventory, InventoryItem inventoryItem) {
         return getQuantity(inventory, null, inventoryItem)
     }
 
@@ -1134,7 +1134,7 @@ class InventoryService implements ApplicationContextAware {
      * @param inventory
      * @return
      */
-    Integer getQuantity(Inventory inventory, Location binLocation, InventoryItem inventoryItem) {
+    BigDecimal getQuantity(Inventory inventory, Location binLocation, InventoryItem inventoryItem) {
 
         if (!inventory) {
             throw new RuntimeException("Inventory does not exist")
@@ -1156,18 +1156,18 @@ class InventoryService implements ApplicationContextAware {
             // inventoryItem -> org.pih.warehouse.inventory.InventoryItem_$$_javassist_10
             //log.debug "inventoryItem -> " + inventoryItem.class
             inventoryItem = InventoryItem.get(inventoryItem.id)
-            Integer quantity = quantityMap[inventoryItem]
+            def quantity = quantityMap[inventoryItem]
             return quantity ?: 0
         }
     }
 
 
-    Integer getQuantityAvailableToPromise(InventoryItem inventoryItem) {
+    BigDecimal getQuantityAvailableToPromise(InventoryItem inventoryItem) {
         def currentLocation = getCurrentLocation()
         return getQuantityAvailableToPromise(currentLocation.inventory, inventoryItem)
     }
 
-    Integer getQuantityAvailableToPromise(Inventory inventory, InventoryItem inventoryItem) {
+    BigDecimal getQuantityAvailableToPromise(Inventory inventory, InventoryItem inventoryItem) {
         def quantityOnHand = getQuantity(inventory, inventoryItem)
         return quantityOnHand
     }
@@ -1180,7 +1180,7 @@ class InventoryService implements ApplicationContextAware {
      * @param inventory
      * @return
      */
-    Map<InventoryItem, Integer> getQuantityForInventory(Inventory inventory) {
+    Map<InventoryItem, BigDecimal> getQuantityForInventory(Inventory inventory) {
         def transactionEntries = getTransactionEntriesByInventory(inventory)
         return getQuantityByInventoryItemMap(transactionEntries)
     }
@@ -1192,13 +1192,13 @@ class InventoryService implements ApplicationContextAware {
      * @param products
      * @return
      */
-    Map<InventoryItem, Integer> getQuantityForInventory(Inventory inventory, List<Product> products) {
+    Map<InventoryItem, BigDecimal> getQuantityForInventory(Inventory inventory, List<Product> products) {
         def transactionEntries = getTransactionEntriesByInventoryAndProduct(inventory, products)
         return getQuantityByInventoryItemMap(transactionEntries)
     }
 
 
-    Map<InventoryItem, Integer> getMostRecentInventoryItemSnapshot(Location location) {
+    Map<InventoryItem, BigDecimal> getMostRecentInventoryItemSnapshot(Location location) {
         Map quantityMap = [:]
         def results = InventoryItemSnapshot.executeQuery("""
             SELECT a.inventoryItem, a.quantityOnHand, DATEDIFF(a.inventoryItem.expirationDate, current_date) as daysToExpiry
@@ -1272,7 +1272,7 @@ class InventoryService implements ApplicationContextAware {
                     def quantityOnHand = quantityBinLocationMap[product][inventoryItem][binLocation]
 
                     def quantityAvailableMap = quantityAvailableInventoryItemMap[product][inventoryItem]
-                    Integer quantityAvailable = quantityAvailableMap ? quantityAvailableMap[binLocation?.id] : 0
+                    def quantityAvailable = quantityAvailableMap ? quantityAvailableMap[binLocation?.id] : 0
 
                     // We don't want to show the negative values on the frontend
                     quantityAvailable = quantityAvailable > 0 ? quantityAvailable : 0
@@ -1321,7 +1321,7 @@ class InventoryService implements ApplicationContextAware {
         return quantityAvailableMap
     }
 
-    Integer getQuantityAvailableToPromise(Product product, Location location) {
+    BigDecimal getQuantityAvailableToPromise(Product product, Location location) {
         def productAvailability = ProductAvailability.createCriteria().get {
             projections {
                 sum("quantityAvailableToPromise")
@@ -1389,8 +1389,8 @@ class InventoryService implements ApplicationContextAware {
                     )
                 }
                 .collect { key, rows ->
-                    Integer totalNewQty = rows.sum { it.newQuantity ?: 0 }
-                    Integer existingOldQty = rows.find { it.oldQuantity > 0 }?.oldQuantity ?: 0
+                    def totalNewQty = rows.sum { it.newQuantity ?: 0 }
+                    def existingOldQty = rows.find { it.oldQuantity > 0 }?.oldQuantity ?: 0
 
                     RecordInventoryRowCommand merged = rows[0]
                     merged.newQuantity = totalNewQty
@@ -1957,7 +1957,7 @@ class InventoryService implements ApplicationContextAware {
      */
     def transferStock(TransferStockCommand command) {
 
-        Integer quantity = command.quantity
+        def quantity = command.quantity
         Location location = command.location
         Location binLocation = command.binLocation
         Inventory inventory = command.location.inventory
@@ -1972,7 +1972,7 @@ class InventoryService implements ApplicationContextAware {
             transactionEntry.quantity = quantity
             transactionEntry.inventoryItem = inventoryItem
 
-            Integer quantityOnHand = getQuantityFromBinLocation(location, binLocation, inventoryItem)
+            def quantityOnHand = getQuantityFromBinLocation(location, binLocation, inventoryItem)
 
             if (!otherLocation?.inventory) {
                 transaction.errors.reject("Destination does not have an inventory")
@@ -2637,7 +2637,7 @@ class InventoryService implements ApplicationContextAware {
 
     def getInventorySampling(Location location, Integer n) {
         def inventoryItems = []
-        Map<InventoryItem, Integer> inventoryItemMap = getQuantityOnHandByInventoryItem(location)
+        Map<InventoryItem, BigDecimal> inventoryItemMap = getQuantityOnHandByInventoryItem(location)
 
         List inventoryItemKeys = inventoryItemMap.keySet().asList()
         Integer maxSize = inventoryItemKeys.size()
@@ -3426,7 +3426,7 @@ class InventoryService implements ApplicationContextAware {
 
         PaginatedList<ExpirationHistoryReportRow> rows = new PaginatedList<ExpirationHistoryReportRow>(entries.collect { ExpirationHistoryReportRow.fromTransactionEntry(it) }, entries.totalCount)
 
-        Integer totalQuantityLostToExpiry = rows.sum { it?.quantityLostToExpiry ?: 0 } as Integer ?: 0
+        def totalQuantityLostToExpiry = rows.sum { it?.quantityLostToExpiry ?: 0 } as Integer ?: 0
         BigDecimal totalValueLostToExpiry = rows.sum { it?.valueLostToExpiry ?: 0 } as BigDecimal ?: 0
 
         return new ExpirationHistoryReport(

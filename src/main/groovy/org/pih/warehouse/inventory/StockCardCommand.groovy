@@ -26,8 +26,8 @@ class StockCardCommand extends DefaultNullableCommand {
     Location warehouse
     Inventory inventory
     InventoryLevel inventoryLevel
-    Integer totalQuantity
-    Integer totalQuantityAvailableToPromise
+    BigDecimal totalQuantity
+    BigDecimal totalQuantityAvailableToPromise
 
     // Current stock section
     List<InventoryItem> lotNumberList
@@ -36,7 +36,7 @@ class StockCardCommand extends DefaultNullableCommand {
     List<Shipment> pendingShipmentList
     Map<Transaction, List<TransactionEntry>> transactionEntriesByTransactionMap
     Map<InventoryItem, List<TransactionEntry>> transactionEntriesByInventoryItemMap
-    Map<InventoryItem, Integer> quantityByInventoryItemMap
+    Map<InventoryItem, BigDecimal> quantityByInventoryItemMap
     List<AvailableItem> availableItems
 
     Map requisitionMap = [:]
