@@ -141,7 +141,7 @@ class OrderItem implements Serializable, Comparable<OrderItem> {
         product(nullable: false)
         inventoryItem(nullable: true)
         requestedBy(nullable: true)
-        quantity(nullable: false, min: 1L)
+        quantity(nullable: false, min: 1.0)
         quantityUom(nullable: true)
         quantityPerUom(nullable: false, validator: { value -> value > 0 } )
         productPackage(nullable: true)

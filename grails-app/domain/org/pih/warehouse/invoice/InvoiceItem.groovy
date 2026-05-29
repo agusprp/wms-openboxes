@@ -80,7 +80,7 @@ class InvoiceItem implements Serializable {
         product(nullable: true)
         glAccount(nullable: true)
         budgetCode(nullable: true)
-        quantity(nullable: false, min: 0L, validator: { BigDecimal quantity, InvoiceItem obj ->
+        quantity(nullable: false, min: 0.0, validator: { BigDecimal quantity, InvoiceItem obj ->
             // Order adjustments are not quantity-based, they should always have quantity = 1
             if (obj.orderAdjustment && quantity > 1) {
                 return ['invoiceItem.invalidQuantity.label']

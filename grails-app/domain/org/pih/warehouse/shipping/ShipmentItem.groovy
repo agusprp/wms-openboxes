@@ -91,7 +91,7 @@ class ShipmentItem implements Comparable, Serializable {
         // TODO: this doesn't seem to prevent the product field from being empty
         lotNumber(nullable: true, maxSize: 255)
         expirationDate(nullable: true)
-        quantity(min: 0L, range: 0L..2147483646L)
+        quantity(min: 0.0, range: 0.0..2147483646.0)
         recipient(nullable: true)
         inventoryItem(nullable: true)
         donor(nullable: true)
