@@ -552,3 +552,75 @@ services:
 3. **DB columns:** Semua kolom quantity diubah manual via ALTER ke `decimal(19,3)` ✅
 4. **Constraint validation:** `min:` dan `range:` pake BigDecimal literal (`1.0`, `0.0`) biar kompatibel dengan property type ✅
 5. **Testing:** Login + dashboard + PO list — ✅ OK. Input decimal 12.233 perlu dicek di UI.
+
+---
+
+## H. GSP View Fixes — Decimal Display Format (PR #2)
+
+> **Issue:** [#2 Packing List & shipment views display quantity without decimal places](https://github.com/agusprp/wms-openboxes/issues/2)
+> **Branch:** `bugfix/packing-list-decimal-display`
+> **Base:** `feature/int-to-decimal-quantity`
+
+### Latar Belakang
+
+Setelah domain fields berubah dari `Integer` ke `BigDecimal` dan DB columns ke `decimal(19,3)`, GSP views masih menggunakan format number `###,##0` yang hanya menampilkan bilangan bulat. Contoh: `12.5` kg muncul sebagai `12`.
+
+### File & Perubahan
+
+| File | Lines | Sebelum | Sesudah |
+|---|---|---|---|
+| `grails-app/views/stockMovement/_packingList.gsp` | 164, 168, 171 | `###,##0` | `###,##0.###` |
+| `grails-app/views/shipment/showDetails.gsp` | 448, 453, 456 | `###,##0` | `###,##0.###` |
+| `grails-app/views/email/_shipmentItemReceived.gsp` | 86, 89 | `###,##0` | `###,##0.###` |
+| `grails-app/views/email/_shipmentItemShipped.gsp` | 72 | `###,##0` | `###,##0.###` |
+| `grails-app/views/email/_shipmentReceived.gsp` | 285, 288 | `###,##0` | `###,##0.###` |
+| `grails-app/views/email/_shipmentShipped.gsp` | 298 | `###,##0` | `###,##0.###` |
+
+### Detail Perubahan
+
+#### 1. `stockMovement/_packingList.gsp`
+
+Halaman Packing List di Stock Movement show — yang Bro laporkan.
+
+**Sebelum:**
+```html
+<g:formatNumber number="${shipmentItem?.quantity}" format="###,##0" />
+<g:formatNumber number="${shipmentItem?.quantityReceived()}" format="###,##0"/>
+<g:formatNumber number="${shipmentItem?.quantityCanceled()}" format="###,##0"/>
+```
+
+**Sesudah:**
+```html
+<g:formatNumber number="${shipmentItem?.quantity}" format="###,##0.###" />
+<g:formatNumber number="${shipmentItem?.quantityReceived()}" format="###,##0.###"/>
+<g:formatNumber number="${shipmentItem?.quantityCanceled()}" format="###,##0.###"/>
+```
+
+#### 2. `shipment/showDetails.gsp`
+
+**Sebelum:**
+```html
+<g:formatNumber number="${shipmentItem?.quantity}" format="###,##0" />
+<g:formatNumber number="${shipmentItem?.quantityReceived()}" format="###,##0"/>
+<g:formatNumber number="${shipmentItem?.quantityCanceled()}" format="###,##0"/>
+```
+
+**Sesudah:**
+```html
+<g:formatNumber number="${shipmentItem?.quantity}" format="###,##0.###" />
+<g:formatNumber number="${shipmentItem?.quantityReceived()}" format="###,##0.###"/>
+<g:formatNumber number="${shipmentItem?.quantityCanceled()}" format="###,##0.###"/>
+```
+
+#### 3. Email Templates (`email/_shipmentItemReceived`, `_shipmentItemShipped`, `_shipmentReceived`, `_shipmentShipped`)
+
+Semua format `###,##0` untuk field quantity diubah ke `###,##0.###` — total 6 lokasi di 4 file.
+
+### Tidak diubah (masih integer display — sengaja)
+
+Format `###,##0.00`, `###,##0.00##`, `###,##0.####` untuk **price/totalValue** fields tetap dipertahankan — karena price fields pakai format 2-4 decimal yang sudah sesuai.
+
+### Catatan
+
+1. **Format `###,##0.###`:** Menampilkan min 0 dan maks 3 angka decimal. Contoh: `0` → `0`, `0.5` → `0.5`, `1.234` → `1.234`.
+2. **Build ulang diperlukan:** Perubahan hanya di GSP, cukup rebuild WAR + redeploy. Tidak perlu migrasi DB.

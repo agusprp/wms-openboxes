@@ -161,14 +161,14 @@
                         </g:else>
                     </td>
                     <td aria-label="Quantity Shipped" class="center quantity" data-testid="quantity-shipped">
-                        <g:formatNumber number="${shipmentItem?.quantity}" format="###,##0" />
+                        <g:formatNumber number="${shipmentItem?.quantity}" format="###,##0.###" />
                     </td>
                     <g:if test="${shipmentInstance?.wasReceived()||shipmentInstance?.wasPartiallyReceived()}">
                         <td aria-label="Quantity Received" class="center" style="white-space:nowrap;${shipmentItem?.quantityReceived() != shipmentItem?.quantity ? ' color:red;' : ''}" data-testid="quantity-received">
-                            <g:formatNumber number="${shipmentItem?.quantityReceived()}" format="###,##0"/>
+                            <g:formatNumber number="${shipmentItem?.quantityReceived()}" format="###,##0.###"/>
                         </td>
                         <td aria-label="Quantity Canceled" class="center" style="white-space:nowrap;${shipmentItem?.quantityReceived() != shipmentItem?.quantity ? ' color:red;' : ''}" data-testid="quantity-canceled">
-                            <g:formatNumber number="${shipmentItem?.quantityCanceled()}" format="###,##0"/>
+                            <g:formatNumber number="${shipmentItem?.quantityCanceled()}" format="###,##0.###"/>
                         </td>
                     </g:if>
                     <td aria-label="Unit Of Measure" data-testid="uom">

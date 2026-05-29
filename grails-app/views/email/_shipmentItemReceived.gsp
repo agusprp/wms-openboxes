@@ -83,10 +83,10 @@
                             <format:product product="${receiptItem?.inventoryItem?.product}" />
                         </td>
                         <td style="text-align: center;">
-                            <g:formatNumber number="${receiptItem.quantityReceiving ?: 0}" format="###,##0" />
+                            <g:formatNumber number="${receiptItem.quantityReceiving ?: 0}" format="###,##0.###"/>
                         </td>
                         <td style="text-align: center;">
-                            <g:formatNumber number="${receiptItem.quantityCanceled}" format="###,##0" />
+                            <g:formatNumber number="${receiptItem.quantityCanceled}" format="###,##0.###"/>
                         </td>
                         <td>
                             ${receiptItem?.comment}
